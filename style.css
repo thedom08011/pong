@@ -1,0 +1,22 @@
+#conteneur{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Cela prend toute la hauteur de la fenêtre */
+}
+
+#monCanvas{
+    display: block;
+    margin: 0 auto; /* Centre horizontalement */
+    background-color: black;
+}
+#conteneurScore{
+    background-color: white;
+    display : flex;
+	padding: 50px; /* Ajoute un espace de 10px de chaque côté. Ajustez selon vos besoins. */
+	margin-top : 20px;
+	justify-content: space-between;
+}
+.score{
+    color:red;
+}
