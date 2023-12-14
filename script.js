@@ -4,19 +4,6 @@ var ctx = canvas.getContext('2d');
 var scorePlayer1 = 0; // Initialiser le score du joueur 1
 var scorePlayer2 = 0; // Initialiser le score du joueur 2
 
-<<<<<<< HEAD
-// raquette gauche
-var raquetteWidth1 = 10;
-var raquetteHeight1 = 100;
-var raquetteX = 50; // Position x de la raquette
-var raquetteY = (canvas.height - raquetteHeight1) / 2; // Position y de la raquette, centrée sur le canvas
-
-//raquette droite
-var raquetteWidth2 = 10;
-var raquetteHeight2 = 100;
-var raquetteX2 = 650;
-var raquetteY2 =  (canvas.height - raquetteHeight2) / 2;
-=======
 let isMovingUp = false;
 let isMovingDown = false;
 
@@ -165,36 +152,10 @@ function updateRaquetteIA() {
 
 
 
->>>>>>> main
 
 var milieuX = canvas.width / 2;  // déterminer le point médian horizontal l'axe X
 
 
-<<<<<<< HEAD
-ctx.fillStyle = 'white'; // Définir la couleur de la raquette
-ctx.fillRect(raquetteX, raquetteY, raquetteWidth1, raquetteHeight1);
-ctx.fillRect(raquetteX2, raquetteY2, raquetteWidth2, raquetteHeight2);
-
-
-ctx.font = '30px Arial'; // Taille et type de police
-ctx.fillStyle = 'white'; // Couleur du texte
-ctx.textAlign = 'center'; // Alignement du texte
-
-ctx.fillText(scorePlayer1, canvas.width / 4, 50); // Pour le joueur 1
-ctx.fillText(scorePlayer2, (canvas.width / 4) * 3, 50); // Pour le joueur 2
-
-
-// Définir le motif de pointillés
-ctx.setLineDash([20, 20]); // Par exemple, 5 pixels de ligne, 15 pixels d'espace
-
-// Dessiner une ligne verticale
-ctx.beginPath();
-ctx.moveTo(milieuX, 0); // Départ du haut du canvas
-ctx.lineTo(milieuX, canvas.height); // Jusqu'au bas du canvas
-ctx.strokeStyle = 'white'; // Couleur de la ligne
-ctx.lineWidth = 10; // Largeur de la ligne
-ctx.stroke();
-=======
 
 function dessinTerrain(){
     ctx.setLineDash([20, 20]); // Par exemple, 5 pixels de ligne, 15 pixels d'espace
@@ -251,6 +212,26 @@ raquette1.speedY = 1;
  }
 }
 
+//redessiner les canvas après que la balle est traversé un de murs
+function restartGame(){
+    balle.x = canvas.width / 2; // Positionne la balle au centre du canvas
+    balle.y = canvas.height / 2;
+    balle.vx = 4; // Définit une vitesse initiale sur l'axe x
+    balle.vy = 4; // Définit une vitesse initiale sur l'axe y  
+
+    // redessiner les elements du jeu
+    dessinTerrain();
+    dessinerBalle();
+    dessinerRaquette();
+    dessinerRaquetteIA();  
+    }
+
+function waitTime() {
+    if (balle.x + balle.width > canvas.width || balle.x < 0) {
+        // Planifiez le redémarrage du jeu après un délai
+        setTimeout(restartGame, 1000);
+    }
+}
 
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Effacer le canvas
@@ -262,9 +243,10 @@ function gameLoop() {
     updateBalle();
     updateRaquetteIA()
     dessinerBalle();
+    waitTime();
     requestAnimationFrame(gameLoop);
 }
 
 // Démarrer la boucle de jeu
 gameLoop();
->>>>>>> main
+
