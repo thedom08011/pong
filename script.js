@@ -210,22 +210,56 @@ if (isMovingDown && raquette1.y < canvas.height - raquette1.height) {
 raquette1.speedY = 1;
  raquette1.y += raquette1.speed;
  }
+
+ // verifier que la balle a bien touché la raquette
+ if (balle.x < raquette1.x + raquette1.width &&
+    balle.x + balle.width > raquette1.x &&
+    balle.y < raquette1.y + raquette1.height &&
+    balle.y + balle.height > raquette1.y) {
+    // Collision détectée, changer la direction de la balle
+    balle.vx = -balle.vx;
+}
 }
 
-//redessiner les canvas après que la balle est traversé un de murs
-function restartGame(){
-    balle.x = canvas.width / 2; // Positionne la balle au centre du canvas
-    balle.y = canvas.height / 2;
-    balle.vx = 4; // Définit une vitesse initiale sur l'axe x
-    balle.vy = 4; // Définit une vitesse initiale sur l'axe y  
+// Génère un nombre aléatoire entre -2 et 2
+function randomVerticalSpeed() {
+    return Math.random() * 4 - 2; // Cette formule donne un nombre entre -2 et 2
+}
 
-    // redessiner les elements du jeu
+
+//redessiner les canvas après que la balle est traversé un de murs
+function restartGame() {
+    // Si la balle a dépassé le mur de droite
+    if (balle.x + balle.width > canvas.width) {
+        // Réinitialiser la position de la balle à droite de la ligne médiane
+        balle.x = canvas.width / 2 + balle.width; // Juste à droite de la ligne médiane
+        balle.y = canvas.height / 2; // Au milieu verticalement
+        balle.vx = -4; // Faire en sorte que la balle se déplace vers la gauche
+        balle.vy = randomVerticalSpeed(); // Réinitialiser le mouvement vertical
+        scorePlayer1 += 1;
+        console.log("score joueur1 + 1");
+    }
+
+    // Si la balle a dépassé le mur de gauche
+    if (balle.x < 0) {
+        // Réinitialiser la position de la balle à gauche, près de la ligne médiane
+        balle.x = canvas.width / 2 - balle.width; // Juste à gauche de la ligne médiane
+        balle.y = canvas.height / 2; // Au milieu verticalement
+        balle.vx = 4; // Faire en sorte que la balle se déplace vers la droite
+        balle.vy = randomVerticalSpeed(); // Réinitialiser le mouvement vertical
+        scorePlayer2 += 1;
+        console.log("score IA + 1");
+    }
+
+    // Redessiner les éléments du jeu 
     dessinTerrain();
     dessinerBalle();
     dessinerRaquette();
-    dessinerRaquetteIA();  
-    }
+    dessinerRaquetteIA(); 
+    //dessinerScore() 
+}
 
+// quand la balle passe le mur gauche ou droite. une seconde passe avant que la partie reprend
 function waitTime() {
     if (balle.x + balle.width > canvas.width || balle.x < 0) {
         // Planifiez le redémarrage du jeu après un délai
@@ -233,8 +267,26 @@ function waitTime() {
     }
 }
 
+
+function winnerGame(){
+if (scorePlayer1 === 5){
+    alert("Vous avez gagné " + scorePlayer1 + " à " + scorePlayer2 );
+    return true;
+}
+if (scorePlayer2 === 5){
+    alert("l'IA a gagné " + scorePlayer2 + " à " + scorePlayer1);
+    return true;
+}
+    return false;
+}
+
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Effacer le canvas
+    if (winnerGame()){
+        setTimeout(resetGame,2000);
+        return;
+    }
+    
     updateGame();
     dessinerRaquette();
     dessinerRaquetteIA();
@@ -249,4 +301,32 @@ function gameLoop() {
 
 // Démarrer la boucle de jeu
 gameLoop();
+
+function resetGame(){
+    scorePlayer1 = 0; // Initialiser le score du joueur 1
+    scorePlayer2 = 0; // Initialiser le score du joueur 2
+
+    raquette1.x = 50;
+    raquette1.y = (canvas.height - 100) / 2,
+    raquetteIA.x = 650;
+    raquetteIA.y = (canvas.height - 100) /2;
+
+
+     // Réinitialiser la balle à son état initial
+     balle.x = canvas.width / 2;
+     balle.y = canvas.height / 2;
+     balle.vx = 4; // Vitesse initiale sur l'axe x
+     balle.vy = 4; // Vitesse initiale sur l'axe y
+
+    updateRaquetteIA;
+    dessinTerrain();
+    dessinerBalle();
+    dessinerRaquette();
+    dessinerRaquetteIA(); 
+    gameLoop();
+}
+
+
+
+
 
